@@ -1,7 +1,7 @@
 {
   "name": "instadex-bitcore-lib",
-  "version": "0.14.1",
-  "description": "A pure and powerful JavaScript InstaDEX library.",
+  "version": "0.14.0",
+  "description": "A pure and powerful JavaScript Instadex library.",
   "author": "BitPay <dev@bitpay.com>",
   "main": "index.js",
   "scripts": {
@@ -57,7 +57,7 @@
     }
   ],
   "keywords": [
-    "instadex",
+    "bitcoin",
     "transaction",
     "address",
     "p2p",
