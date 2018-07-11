@@ -1,4 +1,4 @@
-# Bitcore v0.14
+# Bitcore v0.13
 
 ## Principles
 
@@ -14,6 +14,9 @@ To get started, just `npm install bitcore` or `bower install bitcore`.
 * [Using Different Networks](networks.md)
 * [Private Keys](privatekey.md) and [Public Keys](publickey.md)
 * [Hierarchically-derived Private and Public Keys](hierarchical.md)
+
+## DASH Governance Objects
+* [Governance Object / Proposal](govobject/govobject.md)
 
 ## Payment Handling
 * [Using Different Units](unit.md)
@@ -44,7 +47,7 @@ Some functionality is implemented as a module that can be installed separately:
 * [Blockchain Explorers](https://github.com/bitpay/bitcore-explorers)
 * [Signed Messages](https://github.com/bitpay/bitcore-message)
 
-# Examples
+# Examples 
 
 ## Create and Save a Private Key
 

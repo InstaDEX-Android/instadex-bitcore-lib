@@ -1,7 +1,7 @@
 {
   "name": "instadex-bitcore-lib",
-  "version": "0.14.0",
-  "description": "A pure and powerful JavaScript Instadex library.",
+  "version": "0.13.20",
+  "description": "A pure and powerful JavaScript Dash library.",
   "author": "BitPay <dev@bitpay.com>",
   "main": "index.js",
   "scripts": {
@@ -54,10 +54,22 @@
     {
       "name": "Wei Lu",
       "email": "luwei.here@gmail.com"
+    },
+    {
+      "name": "UdjinM6",
+      "email": "UdjinM6@gmail.com"
+    },
+    {
+      "name": "Jon Kindel",
+      "email": "jon@instadex.io"
+    },
+    {
+      "name": "Alex Werner",
+      "email": "alex@werner.fr"
     }
   ],
   "keywords": [
-    "bitcoin",
+    "dash",
     "transaction",
     "address",
     "p2p",
@@ -85,10 +97,13 @@
     "buffer-compare": "=1.0.0",
     "elliptic": "=3.0.3",
     "inherits": "=2.0.1",
-    "lodash": "=3.10.1"
+    "lodash": "=3.10.1",
+    "sha512": "=0.0.1",
+    "x11-hash-js": "^1.0.0"
   },
   "devDependencies": {
     "bitcore-build": "bitpay/bitcore-build",
+    "browserify": "latest",
     "brfs": "^1.2.0",
     "chai": "^1.10.0",
     "gulp": "^3.8.10",

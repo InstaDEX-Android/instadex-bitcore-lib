@@ -28,12 +28,6 @@ describe('Transaction', function() {
     transaction.uncheckedSerialize().should.equal(tx_1_hex);
   });
 
-  it('should parse the version as a signed integer', function () {
-    var transaction = Transaction('ffffffff0000ffffffff')
-    transaction.version.should.equal(-1);
-    transaction.nLockTime.should.equal(0xffffffff);
-  });
-
   it('fails if an invalid parameter is passed to constructor', function() {
     expect(function() {
       return new Transaction(1);
@@ -51,7 +45,7 @@ describe('Transaction', function() {
       'script': testScript,
       'satoshis': testAmount
     })
-    .to('mrU9pEmAx26HcbKVrABvgL7AwA5fjNFoDc', testAmount - 10000);
+    .to('yXGeNPQXYFXhLAN1ZKrAjxzzBnZ2JZNKnh', testAmount - 10000);
 
   it('can serialize to a plain javascript object', function() {
     var object = testTransaction.toObject();
@@ -64,7 +58,7 @@ describe('Transaction', function() {
 
   it('will not accept NaN as an amount', function() {
     (function() {
-      var stringTx = new Transaction().to('mrU9pEmAx26HcbKVrABvgL7AwA5fjNFoDc', NaN);
+      var stringTx = new Transaction().to('yXGeNPQXYFXhLAN1ZKrAjxzzBnZ2JZNKnh', NaN);
     }).should.throw('Amount is expected to be a positive integer');
   });
 
@@ -198,7 +192,7 @@ describe('Transaction', function() {
 
   // TODO: Migrate this into a test for inputs
 
-  var fromAddress = 'mszYqVnqKoQx4jcTdJXxwKAissE3Jbrrc1';
+  var fromAddress = 'yYo3PeSBv2rMnJeyLUCCzx4Y8VhPppZKkC';
   var simpleUtxoWith100000Satoshis = {
     address: fromAddress,
     txId: 'a477af6b2667c29670467e4e0728b685ee07b240235771862318e29ddbe58458',
@@ -206,19 +200,11 @@ describe('Transaction', function() {
     script: Script.buildPublicKeyHashOut(fromAddress).toString(),
     satoshis: 100000
   };
-
-  var simpleUtxoWith1000000Satoshis = {
-    address: fromAddress,
-    txId: 'a477af6b2667c29670467e4e0728b685ee07b240235771862318e29ddbe58458',
-    outputIndex: 0,
-    script: Script.buildPublicKeyHashOut(fromAddress).toString(),
-    satoshis: 1000000
-  };
   var anyoneCanSpendUTXO = JSON.parse(JSON.stringify(simpleUtxoWith100000Satoshis));
   anyoneCanSpendUTXO.script = new Script().add('OP_TRUE');
-  var toAddress = 'mrU9pEmAx26HcbKVrABvgL7AwA5fjNFoDc';
-  var changeAddress = 'mgBCJAsvzgT2qNNeXsoECg2uPKrUsZ76up';
-  var changeAddressP2SH = '2N7T3TAetJrSCruQ39aNrJvYLhG1LJosujf';
+  var toAddress = 'yXGeNPQXYFXhLAN1ZKrAjxzzBnZ2JZNKnh';
+  var changeAddress = 'yLygrKXHautSYwRAF3TUGJvidxKqXwLA23';
+  var changeAddressP2SH = '8tdHAwttdvR87BihpKRSUjN6HyQNVZsqBv';
   var privateKey = 'cSBnVM4xvxarwGQuAfQFwqDg9k5tErHUHzgWsEfD4zdwUasvqRVY';
   var private1 = '6ce7e97e317d2af16c33db0b9270ec047a91bff3eff8558afb5014afb2bb5976';
   var private2 = 'c9b26b0f771a0d2dad88a44de90f05f416b3b385ff1d989343005546a0032890';
@@ -232,7 +218,6 @@ describe('Transaction', function() {
     script: Script.buildPublicKeyHashOut(fromAddress).toString(),
     satoshis: 1e8
   };
-
   var tenth = 1e7;
   var fourth = 25e6;
   var half = 5e7;
@@ -304,12 +289,12 @@ describe('Transaction', function() {
   describe('change address', function() {
     it('can calculate simply the output amount', function() {
       var transaction = new Transaction()
-        .from(simpleUtxoWith1000000Satoshis)
-        .to(toAddress, 500000)
+        .from(simpleUtxoWith100000Satoshis)
+        .to(toAddress, 50000)
         .change(changeAddress)
         .sign(privateKey);
       transaction.outputs.length.should.equal(2);
-      transaction.outputs[1].satoshis.should.equal(400000);
+      transaction.outputs[1].satoshis.should.equal(40000);
       transaction.outputs[1].script.toString()
         .should.equal(Script.fromAddress(changeAddress).toString());
       var actual = transaction.getChangeOutput().script.toString();
@@ -318,8 +303,8 @@ describe('Transaction', function() {
     });
     it('accepts a P2SH address for change', function() {
       var transaction = new Transaction()
-        .from(simpleUtxoWith1000000Satoshis)
-        .to(toAddress, 500000)
+        .from(simpleUtxoWith100000Satoshis)
+        .to(toAddress, 50000)
         .change(changeAddressP2SH)
         .sign(privateKey);
       transaction.outputs.length.should.equal(2);
@@ -419,8 +404,8 @@ describe('Transaction', function() {
     it('getFee() returns the difference between inputs and outputs if no change address set', function() {
       var transaction = new Transaction()
         .from(simpleUtxoWith100000Satoshis)
-        .to(toAddress, 1000);
-      transaction.getFee().should.equal(99000);
+        .to(toAddress, 10000);
+      transaction.getFee().should.equal(90000);
     });
   });
 
@@ -476,7 +461,7 @@ describe('Transaction', function() {
     it('fails if a dust output is created', function() {
       var transaction = new Transaction()
         .from(simpleUtxoWith1BTC)
-        .to(toAddress, 545)
+        .to(toAddress, 5459)
         .change(changeAddress)
         .sign(privateKey);
       expect(function() {
@@ -486,7 +471,7 @@ describe('Transaction', function() {
     it('doesn\'t fail if a dust output is not dust', function() {
       var transaction = new Transaction()
         .from(simpleUtxoWith1BTC)
-        .to(toAddress, 546)
+        .to(toAddress, 5460)
         .change(changeAddress)
         .sign(privateKey);
       expect(function() {
@@ -529,9 +514,9 @@ describe('Transaction', function() {
       var transaction = new Transaction();
       transaction.from(simpleUtxoWith1BTC);
       transaction
-        .to(toAddress, 84000000)
+        .to(toAddress, 90000000)
         .change(changeAddress)
-        .fee(16000000);
+        .fee(10000000);
 
       expect(function() {
         return transaction.serialize({
@@ -609,7 +594,7 @@ describe('Transaction', function() {
           'script': testScript,
           'satoshis': testAmount
         })
-        .to('mrU9pEmAx26HcbKVrABvgL7AwA5fjNFoDc', testAmount - 10000);
+        .to('yXGeNPQXYFXhLAN1ZKrAjxzzBnZ2JZNKnh', testAmount - 10000);
 
       tx.outputs[0]._satoshis = 100;
       tx.outputs[0]._satoshisBN = new BN('fffffffffffffff', 16);
@@ -625,7 +610,7 @@ describe('Transaction', function() {
           'script': testScript,
           'satoshis': testAmount
         })
-        .to('mrU9pEmAx26HcbKVrABvgL7AwA5fjNFoDc', testAmount - 10000);
+        .to('yXGeNPQXYFXhLAN1ZKrAjxzzBnZ2JZNKnh', testAmount - 10000);
 
       tx.outputs[0]._satoshis = -100;
       tx.outputs[0]._satoshisBN = new BN(-100, 10);
@@ -642,7 +627,7 @@ describe('Transaction', function() {
           'script': testScript,
           'satoshis': testAmount
         })
-        .to('mrU9pEmAx26HcbKVrABvgL7AwA5fjNFoDc', testAmount - 10000);
+        .to('yXGeNPQXYFXhLAN1ZKrAjxzzBnZ2JZNKnh', testAmount - 10000);
 
       tx.toBuffer = sinon.stub().returns({
         length: 10000000
@@ -662,7 +647,7 @@ describe('Transaction', function() {
           'script': testScript,
           'satoshis': testAmount
         })
-        .to('mrU9pEmAx26HcbKVrABvgL7AwA5fjNFoDc', testAmount - 10000);
+        .to('yXGeNPQXYFXhLAN1ZKrAjxzzBnZ2JZNKnh', testAmount - 10000);
 
       tx.isCoinbase = sinon.stub().returns(false);
       tx.inputs[0].isNull = sinon.stub().returns(true);
@@ -932,9 +917,9 @@ describe('Transaction', function() {
       var transaction = new Transaction()
         .from(simpleUtxoWith1BTC)
         .change(changeAddress)
-        .to(toAddress, 1000);
+        .to(toAddress, 10000);
       transaction.inputAmount.should.equal(100000000);
-      transaction.outputAmount.should.equal(99900000);
+      transaction.outputAmount.should.equal(99990000);
     });
     it('returns correct values for coinjoin transaction', function() {
       // see livenet tx c16467eea05f1f30d50ed6dbc06a38539d9bb15110e4b7dc6653046a3678a718
@@ -1026,7 +1011,7 @@ describe('Transaction', function() {
       tx.outputs.length.should.equal(2);
       tx.outputs[0].satoshis.should.equal(10000000);
       tx.outputs[0].script.toAddress().toString().should.equal(toAddress);
-      tx.outputs[1].satoshis.should.equal(89900000);
+      tx.outputs[1].satoshis.should.equal(89990000);
       tx.outputs[1].script.toAddress().toString().should.equal(changeAddress);
     });
 
